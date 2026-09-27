@@ -1,0 +1,28 @@
+# Demo database: PostgreSQL 17 with an empty database "latihan" (user and password: postgres).
+#   docker compose up -d      start it
+#   docker compose down -v    stop it and delete its data
+# Then load the Kaggle Walmart data with load_demo_data.bat (see README).
+# Same result as the one-line command:
+#   docker run -d --name postgres_local -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres
+#     -e POSTGRES_DB=latihan -p 5432:5432 -v pgdata:/var/lib/postgresql/data postgres:17
+# Already running PostgreSQL on port 5432? Skip this and point .env at your own server.
+services:
+  postgres:
+    image: postgres:17  # pinned: version 18 moved the data folder, so the volume path below would not match
+    container_name: sql-csv-export-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: latihan
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d latihan"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:

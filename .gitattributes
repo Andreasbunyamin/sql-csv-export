@@ -1,0 +1,4 @@
+# Windows batch files need CRLF line endings so cmd.exe runs them reliably
+* text=auto
+*.bat text eol=crlf
+*.sh text eol=lf
